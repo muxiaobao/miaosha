@@ -10,6 +10,8 @@ import javax.validation.constraints.NotNull;
  * MVC架构中，UserDO、UserPasswordDO等data object对应数据库的表信息，是纯粹的ORM映射，不涉及业务逻辑的处理
  * 而在service层相关方法中，不可以直接返回查询到的data object对象，应该使用Model进一步封装
  * 【在该类中，将encryptPassword字段也封装到UserModel中】
+ *
+ * NOTE: @NotBlank注解使用javax.validation包时，无法校验，且会抛出异常，推测是版本问题
  */
 public class UserModel {
     private Integer id;
