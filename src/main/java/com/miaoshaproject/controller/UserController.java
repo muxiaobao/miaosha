@@ -19,7 +19,7 @@ import java.util.Random;
 
 @Controller("user")
 @RequestMapping("/user")
-@CrossOrigin(allowCredentials = "true", allowedHeaders = "*")  //解决ajax跨域请求问题
+//@CrossOrigin(allowCredentials = "true", allowedHeaders = "*")  //解决ajax跨域请求问题
 public class UserController extends BaseController {
 
     @Autowired
@@ -48,6 +48,7 @@ public class UserController extends BaseController {
         UserModel userModel = new UserModel();
         userModel.setName(name);
         userModel.setAge(age);
+        userModel.setTelephone(telephone);
         userModel.setGender(new Byte(String.valueOf(gender.intValue())));
         userModel.setRegisterMode("by phone");
         userModel.setEncryptPassword(MD5Encoder.encode(password.getBytes()));
