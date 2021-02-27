@@ -1,28 +1,37 @@
 package com.miaoshaproject.service.model;
 
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class ItemModel {
     private Integer id;
 
     // 商品名称
+    @NotBlank(message = "商品名称不能为空")
     private String title;
 
     // 商品价格
-    private BigDecimal price;
+    @NotNull(message = "商品价格不能为空")
+    @Min(value = 0, message = "商品价格必须大于等于0")
+    private BigDecimal price;  // 不适用double是因为JSON前端传递过来，数字会变化，如1.9 ---> 1.9999
 
     // 商品库存
+    @NotNull(message = "库存不能不填写")
     private Integer stock;
 
     // 商品描述
+    @NotBlank(message = "商品描述信息不能为空")
     private String description;
-
 
     // 商品销量
     private Integer sales;
 
 
     // 商品图片url
+    @NotBlank(message = "商品图片信息不能为空")
     private String imgUrl;
 
 
