@@ -11,6 +11,7 @@ import com.miaoshaproject.service.model.UserModel;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +41,7 @@ public class UserServiceImpl implements UserService {
         if (userModel == null) {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
         }
+
         if (StringUtils.isEmpty(userModel.getName())
             || userModel.getGender() == null
             || userModel.getAge() == null
@@ -50,11 +52,35 @@ public class UserServiceImpl implements UserService {
 
         // 实现model->data object的方法
         UserDO userDO = convertFromModel(userModel);
-        userDOMapper.insertSelective(userDO); //选择性插入 针对null字段的优化处理
+        try {
+            userDOMapper.insertSelective(userDO); //选择性插入 针对null字段的优化处理
+        } catch (DuplicateKeyException ex) {
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"手机号已重复注册");
+        }
+
+        userModel.setId(userDO.getId());
 
         UserPasswordDO userPasswordDO = convertPasswordFromModel(userModel);
         userPasswordDOMapper.insertSelective(userPasswordDO);
 
+        return;
+    }
+
+    @Override
+    public UserModel validateLogin(String telephone, String encryptPassword) throws BusinessException {
+        // 通过用户手机获取用户信息
+        UserDO userDO = userDOMapper.selectByTelephone(telephone);
+        if (userDO == null) {
+            throw new BusinessException(EmBusinessError.USER_LOGIN_FAIL);
+        }
+        UserPasswordDO userPasswordDO = userPasswordDOMapper.selectByUserId(userDO.getId());
+        UserModel userModel = convertFromDataObject(userDO, userPasswordDO);
+
+        // 比对用户信息内加密的密码是否和传输进来的密码相匹配
+        if (!StringUtils.equals(encryptPassword, userModel.getEncryptPassword())){
+            throw new BusinessException(EmBusinessError.USER_LOGIN_FAIL);
+        }
+        return userModel;
     }
 
     private UserDO convertFromModel(UserModel userModel) {
