@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller("item")
 @RequestMapping("/item")
@@ -56,6 +58,23 @@ public class ItemController extends BaseController {
 
         return CommonReturnType.create(itemVO);
     }
+
+
+    // 商品列表页面浏览
+    @RequestMapping(value = "/list", method = {RequestMethod.GET})
+    @ResponseBody
+    public CommonReturnType listItem(){
+        List<ItemModel> itemModelList = itemService.listItem();
+
+        // 使用stream api将list内的itemModel转化为itemVO
+        List<ItemVO> itemVOList = itemModelList.stream().map(itemModel -> {
+           ItemVO itemVO = this.convertVOFromModel(itemModel);
+           return itemVO;
+        }).collect(Collectors.toList());
+
+        return CommonReturnType.create(itemVOList);
+    }
+
 
     private ItemVO convertVOFromModel(ItemModel itemModel) {
         if (itemModel == null) {
