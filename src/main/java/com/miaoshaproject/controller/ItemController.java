@@ -9,7 +9,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
 
@@ -22,6 +24,8 @@ public class ItemController extends BaseController {
 
 
     // 创建商品的controller
+    @RequestMapping(value = "/create", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
+    @ResponseBody
     public CommonReturnType createItem(@RequestParam(name = "title")String title,
                                        @RequestParam(name = "price")BigDecimal price,
                                        @RequestParam(name = "stock")Integer stock,
@@ -37,6 +41,18 @@ public class ItemController extends BaseController {
 
         ItemModel itemModelForReturn = itemService.createItem(itemModel);
         ItemVO itemVO = convertVOFromModel(itemModelForReturn);
+
+        return CommonReturnType.create(itemVO);
+    }
+
+
+    // 商品详情页浏览 (浏览功能一般采用get方法, 因此这里不必添加consumes字段<---那是POST的提交方式)
+    @RequestMapping(value = "/get", method = {RequestMethod.GET})
+    @ResponseBody
+    public CommonReturnType getItem(@RequestParam(name = "id")Integer id) {
+        ItemModel itemModel = itemService.getItemById(id);
+
+        ItemVO itemVO = this.convertVOFromModel(itemModel);
 
         return CommonReturnType.create(itemVO);
     }

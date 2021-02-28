@@ -27,6 +27,7 @@ public class BaseController {
             responseData.put("errCode", businessException.getErrCode());
             responseData.put("errMsg", businessException.getErrMsg());
         } else {
+            System.out.println(exception);
             responseData.put("errCode", EmBusinessError.UNKNOWN_ERROR.getErrCode());
             responseData.put("errMsg", EmBusinessError.UNKNOWN_ERROR.getErrMsg());
         }
