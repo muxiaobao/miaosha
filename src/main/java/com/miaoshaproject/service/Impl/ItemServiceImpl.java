@@ -103,6 +103,28 @@ public class ItemServiceImpl implements ItemService {
         return itemModel;
     }
 
+    @Override
+    @Transactional
+    public boolean decreaseStock(Integer id, Integer amount) {
+        // item_stock独立成表的优势，若后续需要对库存操作优化，完全可以独立出StockService对其操作
+        // 下面的处理逻辑相比”先select，比较amount，再更新“共2次sql来说，性能更好
+        int affectRows = itemStockDOMapper.decreaseStock(id, amount);
+        if (affectRows > 0) {
+            // 更新库存成功
+            return true;
+        } else {
+            // 更新失败
+            return false;
+        }
+    }
+
+    @Override
+    @Transactional
+    public void increaseSales(Integer itemId, Integer amount) {
+        itemDOMapper.increaseSales(itemId, amount);
+
+    }
+
     private ItemModel convertModelFromDataObject(ItemDO itemDO, ItemStockDO itemStockDO) {
         ItemModel itemModel = new ItemModel();
         BeanUtils.copyProperties(itemDO, itemModel);
