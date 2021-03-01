@@ -1,6 +1,5 @@
 package com.miaoshaproject.controller.viewobject;
 
-import org.joda.time.DateTime;
 
 import java.math.BigDecimal;
 
@@ -33,8 +32,8 @@ public class ItemVO {
     // 秒杀活动id
     private Integer promoId;
 
-    // 秒杀活动开始时间 （作倒计时展示）
-    private DateTime startDate;
+    // 秒杀活动开始时间 （作倒计时展示）, [改用string，因为joda-date对象序列化后会增加许多不必要的字段，前端无法正确展示]
+    private String startDate;
 
 
     public Integer getPromoStatus() {
@@ -61,11 +60,11 @@ public class ItemVO {
         this.promoId = promoId;
     }
 
-    public DateTime getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(DateTime startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
