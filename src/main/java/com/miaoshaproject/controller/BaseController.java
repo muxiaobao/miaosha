@@ -16,22 +16,22 @@ public class BaseController {
 
     public static final String CONTENT_TYPE_FORMED = "application/x-www-form-urlencoded";
 
-    // 定义Exception Handler解决未被controller层吸收的异常
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public Object handlerException(HttpServletRequest request, Exception exception) {
-        Map<String, Object> responseData = new HashMap<>();
-        if (exception instanceof BusinessException) {
-            BusinessException businessException = (BusinessException) exception;
-            responseData.put("errCode", businessException.getErrCode());
-            responseData.put("errMsg", businessException.getErrMsg());
-        } else {
-            System.out.println(exception);
-            responseData.put("errCode", EmBusinessError.UNKNOWN_ERROR.getErrCode());
-            responseData.put("errMsg", EmBusinessError.UNKNOWN_ERROR.getErrMsg());
-        }
-
-        return CommonReturnType.create(responseData, "fail");
-    }
+//    // 定义Exception Handler解决未被controller层吸收的异常
+//    @ExceptionHandler(Exception.class)
+//    @ResponseStatus(HttpStatus.OK)
+//    @ResponseBody
+//    public Object handlerException(HttpServletRequest request, Exception exception) {
+//        Map<String, Object> responseData = new HashMap<>();
+//        if (exception instanceof BusinessException) {
+//            BusinessException businessException = (BusinessException) exception;
+//            responseData.put("errCode", businessException.getErrCode());
+//            responseData.put("errMsg", businessException.getErrMsg());
+//        } else {
+//            System.out.println(exception);
+//            responseData.put("errCode", EmBusinessError.UNKNOWN_ERROR.getErrCode());
+//            responseData.put("errMsg", EmBusinessError.UNKNOWN_ERROR.getErrMsg());
+//        }
+//
+//        return CommonReturnType.create(responseData, "fail");
+//    }
 }
