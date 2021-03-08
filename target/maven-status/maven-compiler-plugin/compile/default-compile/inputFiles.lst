@@ -38,5 +38,6 @@ E:\github_repo\miaosha\src\main\java\com\miaoshaproject\controller\ItemControlle
 E:\github_repo\miaosha\src\main\java\com\miaoshaproject\controller\BaseController.java
 E:\github_repo\miaosha\src\main\java\com\miaoshaproject\service\Impl\ItemServiceImpl.java
 E:\github_repo\miaosha\src\main\java\com\miaoshaproject\service\model\ItemModel.java
+E:\github_repo\miaosha\src\main\java\com\miaoshaproject\config\RedisConfig.java
 E:\github_repo\miaosha\src\main\java\com\miaoshaproject\controller\OrderController.java
 E:\github_repo\miaosha\src\main\java\com\miaoshaproject\service\model\PromoModel.java

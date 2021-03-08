@@ -3,6 +3,7 @@ com\miaoshaproject\error\CommonError.class
 com\miaoshaproject\validator\ValidationResult.class
 com\miaoshaproject\service\Impl\OrderServiceImpl.class
 com\miaoshaproject\dataobject\OrderDO.class
+com\miaoshaproject\config\RedisConfig.class
 com\miaoshaproject\App.class
 com\miaoshaproject\dao\ItemStockDOMapper.class
 com\miaoshaproject\response\CommonReturnType.class
