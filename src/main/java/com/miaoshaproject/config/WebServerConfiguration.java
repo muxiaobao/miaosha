@@ -8,6 +8,8 @@ import org.springframework.boot.web.server.ConfigurableWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.stereotype.Component;
 
+
+
 /**
  * spring-configuration-metadata.json中没有的属性，可以定制化内嵌Tomcat的方式修改
  *
@@ -42,4 +44,6 @@ public class WebServerConfiguration implements WebServerFactoryCustomizer<Config
             }
         });
     }
+
+
 }

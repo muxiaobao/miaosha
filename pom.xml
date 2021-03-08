@@ -61,6 +61,17 @@
             <artifactId>joda-time</artifactId>
             <version>2.9.1</version>
         </dependency>
+        <!-- 引入springboot关于redis的依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <!-- spring将自己对session的管理方式存储在redis中 -->
+        <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session-data-redis</artifactId>
+            <version>2.4.1</version>
+        </dependency>
 
     </dependencies>
 

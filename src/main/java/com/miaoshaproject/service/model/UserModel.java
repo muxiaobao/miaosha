@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * MVC架构中，UserDO、UserPasswordDO等data object对应数据库的表信息，是纯粹的ORM映射，不涉及业务逻辑的处理
@@ -13,7 +14,7 @@ import javax.validation.constraints.NotNull;
  *
  * NOTE: @NotBlank注解使用javax.validation包时，无法校验，且会抛出异常，推测是版本问题
  */
-public class UserModel {
+public class UserModel implements Serializable{
     private Integer id;
     @NotBlank(message = "用户名不能为空")
     private String name;
