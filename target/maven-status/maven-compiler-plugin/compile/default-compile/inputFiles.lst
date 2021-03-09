@@ -6,6 +6,7 @@ E:\github_repo\miaosha\src\main\java\com\miaoshaproject\service\OrderService.jav
 E:\github_repo\miaosha\src\main\java\com\miaoshaproject\validator\ValidatorImpl.java
 E:\github_repo\miaosha\src\main\java\com\miaoshaproject\dataobject\OrderDO.java
 E:\github_repo\miaosha\src\main\java\com\miaoshaproject\dao\ItemDOMapper.java
+E:\github_repo\miaosha\src\main\java\com\miaoshaproject\service\CacheService.java
 E:\github_repo\miaosha\src\main\java\com\miaoshaproject\dataobject\UserPasswordDO.java
 E:\github_repo\miaosha\src\main\java\com\miaoshaproject\config\GlobalCorsConfig.java
 E:\github_repo\miaosha\src\main\java\com\miaoshaproject\validator\ValidationResult.java
@@ -16,8 +17,10 @@ E:\github_repo\miaosha\src\main\java\com\miaoshaproject\dao\PromoDOMapper.java
 E:\github_repo\miaosha\src\main\java\com\miaoshaproject\dataobject\ItemStockDO.java
 E:\github_repo\miaosha\src\main\java\com\miaoshaproject\controller\GlobalExceptionHandler.java
 E:\github_repo\miaosha\src\main\java\com\miaoshaproject\service\ItemService.java
+E:\github_repo\miaosha\src\main\java\com\miaoshaproject\serializer\JodaDateTimeJsonDeserializer.java
 E:\github_repo\miaosha\src\main\java\com\miaoshaproject\dataobject\UserDO.java
 E:\github_repo\miaosha\src\main\java\com\miaoshaproject\service\model\OrderModel.java
+E:\github_repo\miaosha\src\main\java\com\miaoshaproject\serializer\JodaDateTimeJsonSerializer.java
 E:\github_repo\miaosha\src\main\java\com\miaoshaproject\service\UserService.java
 E:\github_repo\miaosha\src\main\java\com\miaoshaproject\config\WebServerConfiguration.java
 E:\github_repo\miaosha\src\main\java\com\miaoshaproject\dao\ItemStockDOMapper.java
@@ -33,6 +36,7 @@ E:\github_repo\miaosha\src\main\java\com\miaoshaproject\App.java
 E:\github_repo\miaosha\src\main\java\com\miaoshaproject\controller\UserController.java
 E:\github_repo\miaosha\src\main\java\com\miaoshaproject\error\BusinessException.java
 E:\github_repo\miaosha\src\main\java\com\miaoshaproject\dataobject\ItemDO.java
+E:\github_repo\miaosha\src\main\java\com\miaoshaproject\service\Impl\CacheServiceImpl.java
 E:\github_repo\miaosha\src\main\java\com\miaoshaproject\error\EmBusinessError.java
 E:\github_repo\miaosha\src\main\java\com\miaoshaproject\controller\ItemController.java
 E:\github_repo\miaosha\src\main\java\com\miaoshaproject\controller\BaseController.java

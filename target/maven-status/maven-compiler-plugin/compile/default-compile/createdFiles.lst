@@ -9,6 +9,7 @@ com\miaoshaproject\dao\ItemStockDOMapper.class
 com\miaoshaproject\response\CommonReturnType.class
 com\miaoshaproject\controller\UserController.class
 com\miaoshaproject\service\Impl\ItemServiceImpl.class
+com\miaoshaproject\serializer\JodaDateTimeJsonDeserializer.class
 com\miaoshaproject\service\ItemService.class
 com\miaoshaproject\controller\ItemController.class
 com\miaoshaproject\dao\SequenceDOMapper.class
@@ -19,12 +20,14 @@ com\miaoshaproject\config\GlobalCorsConfig$1.class
 com\miaoshaproject\service\OrderService.class
 com\miaoshaproject\controller\GlobalExceptionHandler.class
 com\miaoshaproject\dataobject\ItemStockDO.class
+com\miaoshaproject\service\Impl\CacheServiceImpl.class
 com\miaoshaproject\config\GlobalCorsConfig.class
 com\miaoshaproject\service\model\ItemModel.class
 com\miaoshaproject\service\UserService.class
 com\miaoshaproject\error\EmBusinessError.class
 com\miaoshaproject\controller\viewobject\ItemVO.class
 com\miaoshaproject\validator\ValidatorImpl.class
+com\miaoshaproject\service\CacheService.class
 com\miaoshaproject\dao\OrderDOMapper.class
 com\miaoshaproject\dataobject\UserPasswordDO.class
 com\miaoshaproject\service\Impl\PromoServiceImpl.class
@@ -33,6 +36,7 @@ com\miaoshaproject\dao\UserPasswordDOMapper.class
 com\miaoshaproject\error\BusinessException.class
 com\miaoshaproject\service\model\UserModel.class
 com\miaoshaproject\dataobject\ItemDO.class
+com\miaoshaproject\serializer\JodaDateTimeJsonSerializer.class
 com\miaoshaproject\dao\PromoDOMapper.class
 com\miaoshaproject\controller\BaseController.class
 com\miaoshaproject\dataobject\UserDO.class
