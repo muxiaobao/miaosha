@@ -2,12 +2,13 @@ package com.miaoshaproject.service.model;
 
 import org.joda.time.DateTime;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
  * 秒杀模型, 为简单起见，同一个秒杀活动仅使用一种商品
  */
-public class PromoModel {
+public class PromoModel implements Serializable {
 
 
     private Integer id;

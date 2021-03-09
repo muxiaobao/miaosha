@@ -4,9 +4,10 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class ItemModel {
+public class ItemModel implements Serializable {
     private Integer id;
 
     // 商品名称

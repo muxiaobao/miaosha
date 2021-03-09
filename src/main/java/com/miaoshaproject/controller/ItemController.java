@@ -8,6 +8,7 @@ import com.miaoshaproject.service.model.ItemModel;
 import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Controller("item")
@@ -24,6 +26,9 @@ public class ItemController extends BaseController {
 
     @Autowired
     private ItemService itemService;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
 
     // 创建商品的controller
@@ -53,7 +58,17 @@ public class ItemController extends BaseController {
     @RequestMapping(value = "/get", method = {RequestMethod.GET})
     @ResponseBody
     public CommonReturnType getItem(@RequestParam(name = "id")Integer id) {
-        ItemModel itemModel = itemService.getItemById(id);
+
+        // 根据商品id查看redis缓存是否命中
+        ItemModel itemModel = (ItemModel) redisTemplate.opsForValue().get("item_" + id);
+        // 若redis缓存未命中，则访问下游service
+        if (itemModel == null) {
+            itemModel = itemService.getItemById(id);
+            // 将itemModel及其itemid缓存到redis
+            redisTemplate.opsForValue().set("item_"+id, itemModel);
+            redisTemplate.expire("item_"+id, 10, TimeUnit.MINUTES);
+        }
+
 
         ItemVO itemVO = this.convertVOFromModel(itemModel);
 
