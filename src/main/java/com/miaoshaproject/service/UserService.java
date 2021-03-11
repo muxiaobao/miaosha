@@ -19,4 +19,8 @@ public interface UserService {
      * @param encryptPassword: 加密后的用户密码
      */
     UserModel validateLogin(String telephone, String encryptPassword) throws BusinessException;
+
+    // user model 缓存模型
+    UserModel getUserByIdInCache(Integer id);
+
 }

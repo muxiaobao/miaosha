@@ -82,7 +82,6 @@ public class ItemController extends BaseController {
         }
 
 
-
         ItemVO itemVO = this.convertVOFromModel(itemModel);
 
         return CommonReturnType.create(itemVO);
