@@ -6,6 +6,7 @@ import com.miaoshaproject.dataobject.ItemDO;
 import com.miaoshaproject.dataobject.ItemStockDO;
 import com.miaoshaproject.error.BusinessException;
 import com.miaoshaproject.error.EmBusinessError;
+import com.miaoshaproject.mq.MqProducer;
 import com.miaoshaproject.service.ItemService;
 import com.miaoshaproject.service.PromoService;
 import com.miaoshaproject.service.model.ItemModel;
@@ -40,6 +41,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private MqProducer mqProducer;
 
 
     private ItemDO convertItemDOFromItemModel(ItemModel itemModel) {
@@ -124,12 +128,20 @@ public class ItemServiceImpl implements ItemService {
     public boolean decreaseStock(Integer id, Integer amount) {
         // item_stock独立成表的优势，若后续需要对库存操作优化，完全可以独立出StockService对其操作
         // 下面的处理逻辑相比”先select，比较amount，再更新“共2次sql来说，性能更好
-        int affectRows = itemStockDOMapper.decreaseStock(id, amount);
-        if (affectRows > 0) {
-            // 更新库存成功
+        // int affectRows = itemStockDOMapper.decreaseStock(id, amount);
+        long result = redisTemplate.opsForValue().increment("promo_item_stock_"+id, amount.intValue()*-1);
+
+        if (result >= 0) {
+            // 更新库存成功, 若消息发送失败则回滚redis记录，返回false
+            boolean mqResult = mqProducer.syncReduceStock(id, amount);
+            if (!mqResult) {
+                redisTemplate.opsForValue().increment("promo_item_stock_"+id, amount.intValue());
+                return false;
+            }
             return true;
         } else {
-            // 更新失败
+            // 更新失败, 因为amount太大，回滚redis记录
+            redisTemplate.opsForValue().increment("promo_item_stock_"+id, amount.intValue());
             return false;
         }
     }
