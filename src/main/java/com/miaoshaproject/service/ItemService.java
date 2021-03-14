@@ -16,8 +16,14 @@ public interface ItemService {
     // 商品详情浏览
     ItemModel getItemById(Integer id);
 
-    // 库存扣减
+    // 库存扣减 (针对redis缓存)
     boolean decreaseStock(Integer id, Integer amount);
+
+    // 库存回补 (针对redis缓存)
+    boolean increaseStock(Integer id, Integer amount);
+
+    // 异步更新库存 (MQ send)
+    boolean asyncDecreaseStock(Integer id, Integer amount);
 
     // 销量增加
     void increaseSales(Integer itemId, Integer amount);

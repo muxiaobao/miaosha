@@ -34,7 +34,7 @@ public class MqProducer {
 
 
     // 同步库存扣减消息
-    public boolean syncReduceStock(Integer itemId, Integer amount) {
+    public boolean asyncReduceStock(Integer itemId, Integer amount) {
         Map<String,Object> bodyMap = new HashMap<>();
         bodyMap.put("itemId", itemId);
         bodyMap.put("amount", amount);
