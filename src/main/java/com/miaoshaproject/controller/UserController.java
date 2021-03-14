@@ -79,7 +79,8 @@ public class UserController extends BaseController {
                                      @RequestParam(name = "password") String password) throws BusinessException, UnsupportedEncodingException, NoSuchAlgorithmException {
 
         // 验证手机号和对应的otpCode相符合
-        String inSessionOtpCode = (String) this.httpServletRequest.getSession().getAttribute(telephone);
+        // String inSessionOtpCode = (String) this.httpServletRequest.getSession().getAttribute(telephone);
+        String inSessionOtpCode = (String) redisTemplate.opsForValue().get("user_phone_"+telephone);
         if (!StringUtils.equals(otpCode, inSessionOtpCode)) {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"短信验证码不符合");
         }
@@ -120,7 +121,9 @@ public class UserController extends BaseController {
         String otpCode = String.valueOf(randomInt);
 
         // 将OTP验证码同对应用户的手机号关联, 应使用redis(key-value pair, expireTime, update easily), 此处先使用HttpSession
-        httpServletRequest.getSession().setAttribute(telephone, otpCode);
+        // httpServletRequest.getSession().setAttribute(telephone, otpCode);
+        redisTemplate.opsForValue().set("user_phone_"+telephone, otpCode);
+        redisTemplate.expire("user_phone_"+telephone, 120, TimeUnit.SECONDS);
 
         // 将OTP验证码通过短信通道发送给用户，省略
         System.out.println("telephone = " + telephone + ", otpCode = " + otpCode);

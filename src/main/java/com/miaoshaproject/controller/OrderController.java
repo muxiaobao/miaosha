@@ -2,6 +2,7 @@ package com.miaoshaproject.controller;
 
 import com.miaoshaproject.error.BusinessException;
 import com.miaoshaproject.error.EmBusinessError;
+import com.miaoshaproject.mq.MqProducer;
 import com.miaoshaproject.response.CommonReturnType;
 import com.miaoshaproject.service.OrderService;
 import com.miaoshaproject.service.model.OrderModel;
@@ -30,6 +31,9 @@ public class OrderController extends BaseController {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    @Autowired
+    private MqProducer mqProducer;
+
 
 
     // 封装下单请求
@@ -50,8 +54,11 @@ public class OrderController extends BaseController {
         }
 
         // 创建订单
-        OrderModel orderModel = orderService.createOrder(userModel.getId(), itemId, promoId, amount);
-
+        //OrderModel orderModel = orderService.createOrder(userModel.getId(), itemId, promoId, amount);
+        boolean result = mqProducer.transactionAsyncReduceStock(userModel.getId(), promoId, itemId, amount);
+        if (!result) {
+            throw new BusinessException(EmBusinessError.UNKNOWN_ERROR,"运气不好");
+        }
 
         return CommonReturnType.create(null);
     }
