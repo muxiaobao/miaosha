@@ -31,4 +31,7 @@ public interface ItemService {
     // item 及 promo model缓存模型
     ItemModel getItemByIdInCache(Integer id);
 
+    // 初始化库存流水,返回库存流水号
+    String initStockLog(Integer itemId, Integer amount);
+
 }

@@ -4,6 +4,7 @@ import com.miaoshaproject.error.BusinessException;
 import com.miaoshaproject.error.EmBusinessError;
 import com.miaoshaproject.mq.MqProducer;
 import com.miaoshaproject.response.CommonReturnType;
+import com.miaoshaproject.service.ItemService;
 import com.miaoshaproject.service.OrderService;
 import com.miaoshaproject.service.model.OrderModel;
 import com.miaoshaproject.service.model.UserModel;
@@ -34,6 +35,9 @@ public class OrderController extends BaseController {
     @Autowired
     private MqProducer mqProducer;
 
+    @Autowired
+    private ItemService itemService;
+
 
 
     // 封装下单请求
@@ -53,9 +57,15 @@ public class OrderController extends BaseController {
             throw new BusinessException(EmBusinessError.USER_NOT_LOGIN,"用户还未登录，不能下单");
         }
 
+
+        // 下单前先加入库存流水init状态
+        String stockLogId = itemService.initStockLog(itemId,amount);
+
+
+
         // 创建订单
         //OrderModel orderModel = orderService.createOrder(userModel.getId(), itemId, promoId, amount);
-        boolean result = mqProducer.transactionAsyncReduceStock(userModel.getId(), promoId, itemId, amount);
+        boolean result = mqProducer.transactionAsyncReduceStock(userModel.getId(), promoId, itemId, amount, stockLogId);
         if (!result) {
             throw new BusinessException(EmBusinessError.UNKNOWN_ERROR,"运气不好");
         }

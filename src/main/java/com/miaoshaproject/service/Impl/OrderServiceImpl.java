@@ -3,8 +3,10 @@ package com.miaoshaproject.service.Impl;
 
 import com.miaoshaproject.dao.OrderDOMapper;
 import com.miaoshaproject.dao.SequenceDOMapper;
+import com.miaoshaproject.dao.StockLogDOMapper;
 import com.miaoshaproject.dataobject.OrderDO;
 import com.miaoshaproject.dataobject.SequenceDO;
+import com.miaoshaproject.dataobject.StockLogDO;
 import com.miaoshaproject.error.BusinessException;
 import com.miaoshaproject.error.EmBusinessError;
 import com.miaoshaproject.service.ItemService;
@@ -43,12 +45,14 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private SequenceDOMapper sequenceDOMapper;
 
+    @Autowired
+    private StockLogDOMapper stockLogDOMapper;
 
 
 
     @Override
     @Transactional
-    public OrderModel createOrder(Integer userId, Integer itemId, Integer promoId, Integer amount) throws BusinessException {
+    public OrderModel createOrder(Integer userId, Integer itemId, Integer promoId, Integer amount, String stockLogId) throws BusinessException {
 
         // 1.校验下单状态：下单的商品是否存在；用户是否合法；购买数量是否正确；
         //ItemModel itemModel = itemService.getItemById(itemId);
@@ -105,6 +109,22 @@ public class OrderServiceImpl implements OrderService {
         // 更新商品销量
         itemService.increaseSales(itemId, amount);
 
+
+        // 设置库存流水状态为成功 【注意：这里虽然直接对数据库进行操作，但对数据库并发性能影响非常小；
+        // 因为stockLogId是每次创建订单时随机生成的，不存在多个用户对库存流水单条记录行锁的竞争条件】
+        StockLogDO stockLogDO = stockLogDOMapper.selectByPrimaryKey(stockLogId);
+        if (stockLogDO == null) {
+            throw new BusinessException(EmBusinessError.UNKNOWN_ERROR);
+        }
+        stockLogDO.setStatus(2);
+        stockLogDOMapper.updateByPrimaryKeySelective(stockLogDO);
+
+//        模拟事务提交长时间无响应的情况
+//        try {
+//            Thread.sleep(30000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
 
         // 4.返回前端

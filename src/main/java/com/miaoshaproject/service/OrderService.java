@@ -17,7 +17,7 @@ import com.miaoshaproject.service.model.OrderModel;
 public interface OrderService {
 
     // 创建用户订单
-    OrderModel createOrder(Integer userId, Integer itemId, Integer promoId, Integer amount) throws BusinessException;
+    OrderModel createOrder(Integer userId, Integer itemId, Integer promoId, Integer amount, String stockLogId) throws BusinessException;
 
     // 创建订单号
     String generateOrderNo();
