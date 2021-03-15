@@ -20,4 +20,7 @@ public interface PromoService {
 
     // 活动发布, 实际应该由运维调取该方法来发布活动
     void publishPromo(Integer promoId);
+
+    // 生成秒杀令牌 ———— promoToken：promoId+itemId+userId，即同一个用户只能参与一个秒杀活动，抢购一类商品
+    String generateSecondKillToken(Integer promoId, Integer itemId, Integer userId);
 }
