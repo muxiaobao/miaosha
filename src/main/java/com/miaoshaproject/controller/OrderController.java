@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import java.util.concurrent.*;
 
 @Controller("order")
 @RequestMapping("/order")
@@ -43,8 +45,16 @@ public class OrderController extends BaseController {
     private PromoService promoService;
 
 
+    private ExecutorService executorService;
+
+    @PostConstruct
+    public void init(){
+        executorService = Executors.newFixedThreadPool(20);
+    }
 
 
+
+    // 生成秒杀令牌
     @RequestMapping(value = "/generatetoken", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
     @ResponseBody
     public CommonReturnType generateToken(@RequestParam(name = "itemId")Integer itemId,
@@ -101,14 +111,30 @@ public class OrderController extends BaseController {
         }
 
 
-        // 下单前先加入库存流水init状态
-        String stockLogId = itemService.initStockLog(itemId,amount);
+        // 同步调用线程池的submit方法
+        // 拥塞窗口为20的等待序列，用来队列化泄洪 【同一时间，一台服务器上处理20个请求】
+        Future<Object> future = executorService.submit(new Callable<Object>() {
 
+            @Override
+            public Object call() throws Exception {
+                // 下单前先加入库存流水init状态
+                String stockLogId = itemService.initStockLog(itemId,amount);
+                // 创建订单
+                boolean result = mqProducer.transactionAsyncReduceStock(userModel.getId(), promoId, itemId, amount, stockLogId);
+                if (!result) {
+                    throw new BusinessException(EmBusinessError.UNKNOWN_ERROR,"运气不好");
+                }
 
-        // 创建订单
-        boolean result = mqProducer.transactionAsyncReduceStock(userModel.getId(), promoId, itemId, amount, stockLogId);
-        if (!result) {
-            throw new BusinessException(EmBusinessError.UNKNOWN_ERROR,"运气不好");
+                return null;
+            }
+        });
+
+        try {
+            future.get();
+        } catch (InterruptedException e) {
+            throw new BusinessException(EmBusinessError.UNKNOWN_ERROR);
+        } catch (ExecutionException e) {
+            throw new BusinessException(EmBusinessError.UNKNOWN_ERROR);
         }
 
         return CommonReturnType.create(null);
