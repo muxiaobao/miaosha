@@ -1,5 +1,6 @@
 package com.miaoshaproject.controller;
 
+import com.google.common.util.concurrent.RateLimiter;
 import com.miaoshaproject.error.BusinessException;
 import com.miaoshaproject.error.EmBusinessError;
 import com.miaoshaproject.mq.MqProducer;
@@ -55,9 +56,14 @@ public class OrderController extends BaseController {
 
     private ExecutorService executorService;
 
+    private RateLimiter orderCreateRateLimiter;
+
     @PostConstruct
     public void init(){
         executorService = Executors.newFixedThreadPool(20);
+
+        // 令牌桶算法限制并发数为 100tps
+        orderCreateRateLimiter = RateLimiter.create(100);
     }
 
 
@@ -135,6 +141,11 @@ public class OrderController extends BaseController {
                                         @RequestParam(name = "promoId", required = false)Integer promoId,
                                         @RequestParam(name = "amount")Integer amount,
                                         @RequestParam(name = "promoToken",required = false)String promoToken) throws BusinessException {
+        // 用户尝试从令牌桶中获取令牌
+        if (!orderCreateRateLimiter.tryAcquire()) {
+            throw new BusinessException(EmBusinessError.RATELIMIT);
+        }
+
         // 获取用户的登录信息
         String token = httpServletRequest.getParameterMap().get("token")[0];
         if (StringUtils.isEmpty(token)) {
